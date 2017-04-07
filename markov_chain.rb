@@ -1,11 +1,12 @@
 require_relative 'corpus_parser'
+require_relative 'probability_chain_writer'
+require 'json'
 
 class Markov_Chain
   attr_accessor :corpus, :word, :markov_chain
   
-  def initialize(word, corpus)
-    @corpus = corpus
-    @word = word
+  def initialize(corpus)
+    @corpus = Parser.new(corpus).parse
     @markov_chain = {}
   end
   
@@ -29,16 +30,16 @@ class Markov_Chain
     ranked_matches
   end
   
-  def probable_next_words
-    match_pairs = markov_chain[word.to_sym]
+  def probable_next_words(probable_words)
+    match_pairs = probable_words
     ranked_matches = {}
     
     if match_pairs
       match_pairs.each do |match_pair|
-        if ranked_matches[match_pair.to_sym]
-          ranked_matches[match_pair.to_sym] += 1
+        if ranked_matches[match_pair.to_s.to_sym]
+          ranked_matches[match_pair.to_s.to_sym] += 1
         else
-          ranked_matches[match_pair.to_sym] = 1
+          ranked_matches[match_pair.to_s.to_sym] = 1
         end
       end
       calculate_probabilities(ranked_matches, match_pairs.length)
@@ -47,12 +48,16 @@ class Markov_Chain
     end
   end
   
+  def return_probability_chain
+    make_probability_chain
+    populate_chain
+    markov_chain.each do |word, probable_words|
+      markov_chain[word] = probable_next_words(probable_words)
+    end
+    
+    Probability_chain_writer.write(markov_chain)
+  end
+  
 end
 
-parser = Parser.new('shakespear-complete-body-of-text.txt')
-parsed = parser.parse
-chain = Markov_Chain.new('die', parsed)
-
-chain.make_probability_chain
-chain.populate_chain
-p chain.probable_next_words
+Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain

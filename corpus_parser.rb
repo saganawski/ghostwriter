@@ -10,7 +10,7 @@ class Parser
 
 	def parse
 		parsed_text = []
-		parsed = CSV.foreach(@corpus) do |row|
+		CSV.foreach(@corpus) do |row|
 			# check for empty arrays
 			if row != []
 				row.to_s.split(' ').each do |line|
