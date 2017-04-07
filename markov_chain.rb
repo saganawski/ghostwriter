@@ -25,7 +25,7 @@ class Markov_Chain
   def calculate_probabilities(ranked_matches, match_pairs_count)
     ranked_matches.each do |match, count|
       # wrapped the count line in parens and then times 100 to get a better percentage
-      ranked_matches[match] = (count / match_pairs_count.to_f) * 100
+      ranked_matches[match] = (count / match_pairs_count.to_f)
     end
     ranked_matches
   end
