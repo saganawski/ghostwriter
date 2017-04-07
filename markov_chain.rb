@@ -1,10 +1,12 @@
 require_relative 'corpus_parser'
+require_relative 'probability_chain_writer'
+require 'json'
 
 class Markov_Chain
   attr_accessor :corpus, :word, :markov_chain
   
   def initialize(corpus)
-    @corpus = corpus
+    @corpus = Parser.new(corpus).parse
     @markov_chain = {}
   end
   
@@ -53,12 +55,9 @@ class Markov_Chain
       markov_chain[word] = probable_next_words(probable_words)
     end
     
-    markov_chain
+    Probability_chain_writer.write(markov_chain)
   end
   
 end
 
-parser = Parser.new('shakespear-complete-body-of-text.txt')
-parsed = parser.parse
-chain = Markov_Chain.new(parsed)
-puts chain.return_probability_chain
+Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain
