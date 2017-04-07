@@ -49,9 +49,9 @@ class Markov_Chain
   
 end
 
-parser = Parser.new('Romeo-And-Juliet.txt')
+parser = Parser.new('shakespear-complete-body-of-text.txt')
 parsed = parser.parse
-chain = Markov_Chain.new('and', parsed)
+chain = Markov_Chain.new('die', parsed)
 
 chain.make_probability_chain
 chain.populate_chain
