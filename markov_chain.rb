@@ -60,4 +60,4 @@ class Markov_Chain
   
 end
 
-Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain
+Markov_Chain.new('the-harry-potter-series.txt').return_probability_chain
