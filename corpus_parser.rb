@@ -34,13 +34,8 @@ class Parser
 
 	# filter out empty strings
 	def text_space_filter(filtered_array)
-		@parsed_filtered_array = filtered_array.reject { |word|  word == '' }
-
+		@parsed_filtered_array = filtered_array.reject { |word|  word == '' || word == 'nil'}
 	end
 
 end
 
-parse = Parser.new('Romeo-And-Juliet.txt')
-parse.parse
-p parse.parsed_filtered_array
-# parse.text_punctuation_filter
