@@ -60,4 +60,4 @@ class Markov_Chain
   
 end
 
-Markov_Chain.new('book-1.txt').return_probability_chain
+Markov_Chain.new('got-series.txt').return_probability_chain
