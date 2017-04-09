@@ -70,7 +70,7 @@ class Markov_Chain
     end
   end
   
-  def return_probability_chain(length)
+  def return_probability_chain(length, file)
     make_probability_chain(length)
     populate_chain(length)
 
@@ -78,11 +78,11 @@ class Markov_Chain
       markov_chain[word] = probable_next_words(probable_words)
     end
     
-    Probability_chain_writer.write(markov_chain)
+    Probability_chain_writer.write(markov_chain, file)
   end
   
   
 end
 
 # Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(1)
-Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(3)
+Markov_Chain.new('the-harry-potter-series.txt').return_probability_chain(3, 'markov_chains/harry-pottgit er.json')
