@@ -31,18 +31,17 @@ class Markov_Chain
   end
   
   def populate_chain(key_length)
-    corpus.each_with_index do |word, index|
-      self.markov_chain[word.to_sym] << corpus[index + 1]
-    end
-  end
-  
-  def populate_chain_length_2
-    corpus.each_with_index do |word, index|
-      if corpus[index + 2]
-        self.markov_chain["#{word}_#{corpus[index + 1]}".to_sym] << corpus[index + 2]
+    corpus.length.times do |index|
+      key = ''
+      key_length.times do |n|
+        if corpus[index + n]
+          key << create_keys(key, corpus[index + n])
+          self.markov_chain[key.to_sym] << corpus[index + n + 1]
+        end
       end
     end
   end
+  
   
   def calculate_probabilities(ranked_matches, match_pairs_count)
     ranked_matches.each do |match, count|
@@ -72,13 +71,9 @@ class Markov_Chain
   end
   
   def return_probability_chain(length)
-    if length == 1
-      make_probability_chain
-      populate_chain
-    elsif length == 2
-      make_probability_chain_2
-      populate_chain_length_2
-    end
+    make_probability_chain(length)
+    populate_chain(length)
+
     markov_chain.each do |word, probable_words|
       markov_chain[word] = probable_next_words(probable_words)
     end
@@ -90,4 +85,4 @@ class Markov_Chain
 end
 
 # Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(1)
-Markov_Chain.new('shakespeare-complete-body-of-text.txt').make_probability_chain(3)
+Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(3)
