@@ -96,5 +96,5 @@ end
 
 # Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(1)
 start = Time.now
-Markov_Chain.new('the-harry-potter-series.txt').return_probability_chain(2, 'markov_chains/harry-potter-test-2.json')
+Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(3, 'markov_chains/shakespeare-test-3.json')
 puts (Time.now - start)/60
