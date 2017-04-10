@@ -10,46 +10,35 @@ class Markov_Chain
     @markov_chain = {}
   end
 
-  def create_keys(key, next_word)
-    if key.empty?
-      next_word
-    else
-      "_#{next_word}"
-    end
+  def create_keys(index, n)
+    key = corpus[index]
+    n.times { |iteration| key += "_#{corpus[index + iteration + 1]}"}
+    key
   end
   
-  def make_probability_chain(key_length)
+  def make_probability_chain(n)
     corpus.length.times do |index|
       # key is reset between words in the corpus
-      key = ''
-      # creates all n-gram keys based on given length
-      key_length.times do |n|
-        if corpus[index + n]
-          key << create_keys(key, corpus[index + n])
-          self.markov_chain[key.to_sym] = []
-        end
+      if corpus[index + n]
+        key = create_keys(index, n)
+        self.markov_chain[key.to_sym] = []
       end
     end
   end
   
-  def populate_chain(key_length)
+  def populate_chain(n)
     corpus.length.times do |index|
-      key = ''
-      key_length.times do |n|
-        if corpus[index + n]
-          key << create_keys(key, corpus[index + n])
+      # key_length.times do |n|
+        if corpus[index + n + 1]
+          key = create_keys(index, n)
           self.markov_chain[key.to_sym] << corpus[index + n + 1]
         end
-      end
+      # end
     end
   end
   
   def prune_rankings(ranked_matches)
-    pruned_matches = {}
-    sorted_array = ranked_matches.sort_by {|key, value| value}.sort_by { |pair| pair[1]}[0...3]
-    
-    sorted_array.each{|pair| pruned_matches[pair[0]] = pair[1]}
-    pruned_matches
+    ranked_matches.select{ |word, probability| probability > 0.01}
   end
   
   def calculate_probabilities(ranked_matches, match_pairs_count)
@@ -96,5 +85,5 @@ end
 
 # Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(1)
 start = Time.now
-Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(3, 'markov_chains/shakespeare-test-3.json')
+Markov_Chain.new('got-series.txt').return_probability_chain(0, 'markov_chains/game-of-thrones-n-1.json')
 puts (Time.now - start)/60
