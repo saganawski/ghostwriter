@@ -20,7 +20,9 @@ class Markov_Chain
   
   def make_probability_chain(key_length)
     corpus.length.times do |index|
+      # key is reset between words in the corpus
       key = ''
+      # creates all n-gram keys based on given length
       key_length.times do |n|
         if corpus[index + n]
           key << create_keys(key, corpus[index + n])
@@ -42,13 +44,21 @@ class Markov_Chain
     end
   end
   
+  def prune_rankings(ranked_matches)
+    pruned_matches = {}
+    sorted_array = ranked_matches.sort_by {|key, value| value}.sort_by { |pair| pair[1]}[0...3]
+    
+    sorted_array.each{|pair| pruned_matches[pair[0]] = pair[1]}
+    pruned_matches
+  end
   
   def calculate_probabilities(ranked_matches, match_pairs_count)
+    
     ranked_matches.each do |match, count|
       ranked_matches[match] = (count / match_pairs_count.to_f)
     end
-    ranked_matches.delete_if {|key, probability| probability < 0.003}
-    ranked_matches
+
+    prune_rankings(ranked_matches)
   end
   
   def probable_next_words(probable_words)
@@ -85,4 +95,6 @@ class Markov_Chain
 end
 
 # Markov_Chain.new('shakespeare-complete-body-of-text.txt').return_probability_chain(1)
-Markov_Chain.new('the-harry-potter-series.txt').return_probability_chain(3, 'markov_chains/harry-potter.json')
+start = Time.now
+Markov_Chain.new('the-harry-potter-series.txt').return_probability_chain(2, 'markov_chains/harry-potter-test-2.json')
+puts (Time.now - start)/60
